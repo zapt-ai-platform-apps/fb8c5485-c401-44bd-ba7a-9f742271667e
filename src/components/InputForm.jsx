@@ -1,4 +1,5 @@
-import { Component } from 'solid-js';
+import { Show } from 'solid-js';
+import AdvancedOptions from './AdvancedOptions';
 
 const InputForm = (props) => {
   const {
@@ -8,6 +9,16 @@ const InputForm = (props) => {
     setDietaryPreference,
     loading,
     handleGenerateRecipe,
+    showAdvancedOptions,
+    setShowAdvancedOptions,
+    includeCookingTime,
+    setIncludeCookingTime,
+    includeNutritionalInfo,
+    setIncludeNutritionalInfo,
+    cuisineType,
+    setCuisineType,
+    difficultyLevel,
+    setDifficultyLevel,
   } = props;
 
   return (
@@ -29,7 +40,7 @@ const InputForm = (props) => {
           Dietary Preference:
         </label>
         <select
-          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer"
           value={dietaryPreference()}
           onChange={(e) => setDietaryPreference(e.target.value)}
         >
@@ -40,6 +51,30 @@ const InputForm = (props) => {
           <option>Gluten-Free</option>
         </select>
       </div>
+      <div class="mb-4 flex items-center">
+        <input
+          type="checkbox"
+          id="advancedOptionsToggle"
+          class="mr-2 cursor-pointer"
+          checked={showAdvancedOptions()}
+          onChange={(e) => setShowAdvancedOptions(e.target.checked)}
+        />
+        <label for="advancedOptionsToggle" class="text-gray-700 text-sm font-bold cursor-pointer">
+          Advanced Options
+        </label>
+      </div>
+      <Show when={showAdvancedOptions()}>
+        <AdvancedOptions
+          includeCookingTime={includeCookingTime}
+          setIncludeCookingTime={setIncludeCookingTime}
+          includeNutritionalInfo={includeNutritionalInfo}
+          setIncludeNutritionalInfo={setIncludeNutritionalInfo}
+          cuisineType={cuisineType}
+          setCuisineType={setCuisineType}
+          difficultyLevel={difficultyLevel}
+          setDifficultyLevel={setDifficultyLevel}
+        />
+      </Show>
       <button
         class={`w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer ${
           loading() ? 'opacity-50 cursor-not-allowed' : ''
