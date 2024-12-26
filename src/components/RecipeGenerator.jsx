@@ -1,66 +1,36 @@
-import { createSignal } from 'solid-js';
-import { createEvent } from '../supabaseClient';
+import useRecipeGenerator from '../hooks/useRecipeGenerator';
 import InputForm from './InputForm';
 import RecipeDisplay from './RecipeDisplay';
+import LanguageSelector from './LanguageSelector';
 
 function RecipeGenerator() {
-  const [ingredients, setIngredients] = createSignal('');
-  const [dietaryPreference, setDietaryPreference] = createSignal('None');
-  const [loading, setLoading] = createSignal(false);
-  const [generatedRecipe, setGeneratedRecipe] = createSignal('');
-
-  // Advanced options
-  const [showAdvancedOptions, setShowAdvancedOptions] = createSignal(false);
-  const [includeCookingTime, setIncludeCookingTime] = createSignal(false);
-  const [includeNutritionalInfo, setIncludeNutritionalInfo] = createSignal(false);
-  const [cuisineType, setCuisineType] = createSignal('Any');
-  const [difficultyLevel, setDifficultyLevel] = createSignal('Any');
-
-  const handleGenerateRecipe = async () => {
-    if (!ingredients()) return;
-
-    setLoading(true);
-    setGeneratedRecipe('');
-
-    let prompt = `Create a detailed recipe using the following ingredients: ${ingredients()}. The recipe should be suitable for a ${dietaryPreference().toLowerCase()} diet.`;
-
-    if (showAdvancedOptions()) {
-      if (includeCookingTime()) {
-        prompt += ' Include estimated cooking time.';
-      }
-      if (includeNutritionalInfo()) {
-        prompt += ' Include nutritional information.';
-      }
-      if (cuisineType() !== 'Any') {
-        prompt += ` The recipe should be in ${cuisineType()} cuisine.`;
-      }
-      if (difficultyLevel() !== 'Any') {
-        prompt += ` The difficulty level should be ${difficultyLevel().toLowerCase()}.`;
-      }
-    }
-
-    prompt += ' Please provide the recipe in markdown format.';
-
-    console.log('Sending prompt to AI:', prompt);
-
-    try {
-      const result = await createEvent('chatgpt_request', {
-        prompt: prompt,
-        response_type: 'text',
-      });
-
-      console.log('Received result from AI:', result);
-
-      setGeneratedRecipe(result);
-    } catch (error) {
-      console.error('Error generating recipe:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    ingredients,
+    setIngredients,
+    dietaryPreference,
+    setDietaryPreference,
+    loading,
+    generatedRecipe,
+    showAdvancedOptions,
+    setShowAdvancedOptions,
+    includeCookingTime,
+    setIncludeCookingTime,
+    includeNutritionalInfo,
+    setIncludeNutritionalInfo,
+    cuisineType,
+    setCuisineType,
+    difficultyLevel,
+    setDifficultyLevel,
+    unitPreference,
+    setUnitPreference,
+    language,
+    setLanguage,
+    handleGenerateRecipe,
+  } = useRecipeGenerator();
 
   return (
     <div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-green-100 to-blue-100 p-4">
+      <LanguageSelector language={language} setLanguage={setLanguage} />
       <h1 class="text-4xl font-bold text-green-600 mb-8">Custom Recipe Generator</h1>
       <InputForm
         ingredients={ingredients}
@@ -79,6 +49,9 @@ function RecipeGenerator() {
         setCuisineType={setCuisineType}
         difficultyLevel={difficultyLevel}
         setDifficultyLevel={setDifficultyLevel}
+        unitPreference={unitPreference}
+        setUnitPreference={setUnitPreference}
+        language={language}
       />
       <RecipeDisplay generatedRecipe={generatedRecipe} />
       <div class="mt-8 text-gray-500">

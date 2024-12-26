@@ -1,5 +1,6 @@
 import { Show } from 'solid-js';
 import AdvancedOptions from './AdvancedOptions';
+import IngredientsInput from './IngredientsInput.jsx';
 
 const InputForm = (props) => {
   const {
@@ -19,22 +20,18 @@ const InputForm = (props) => {
     setCuisineType,
     difficultyLevel,
     setDifficultyLevel,
+    unitPreference,
+    setUnitPreference,
+    language,
   } = props;
 
   return (
     <div class="w-full max-w-2xl bg-white p-6 rounded-lg shadow-md">
-      <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2">
-          Available Ingredients:
-        </label>
-        <textarea
-          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 resize-none box-border"
-          rows="4"
-          placeholder="e.g., chicken, tomatoes, basil"
-          value={ingredients()}
-          onInput={(e) => setIngredients(e.target.value)}
-        ></textarea>
-      </div>
+      <IngredientsInput
+        ingredients={ingredients}
+        setIngredients={setIngredients}
+        language={language}
+      />
       <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2">
           Dietary Preference:
@@ -73,6 +70,8 @@ const InputForm = (props) => {
           setCuisineType={setCuisineType}
           difficultyLevel={difficultyLevel}
           setDifficultyLevel={setDifficultyLevel}
+          unitPreference={unitPreference}
+          setUnitPreference={setUnitPreference}
         />
       </Show>
       <button
